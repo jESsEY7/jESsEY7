@@ -1,0 +1,176 @@
+{
+  "name": "Vehicle",
+  "type": "object",
+  "properties": {
+    "make": {
+      "type": "string",
+      "description": "Vehicle manufacturer"
+    },
+    "model": {
+      "type": "string",
+      "description": "Vehicle model"
+    },
+    "year": {
+      "type": "number",
+      "description": "Manufacturing year"
+    },
+    "price": {
+      "type": "number",
+      "description": "Drive-away price in USD"
+    },
+    "mileage": {
+      "type": "number",
+      "description": "Odometer reading in miles"
+    },
+    "condition": {
+      "type": "string",
+      "enum": [
+        "new",
+        "certified_preowned",
+        "excellent",
+        "good",
+        "fair"
+      ],
+      "description": "Vehicle condition"
+    },
+    "body_type": {
+      "type": "string",
+      "enum": [
+        "sedan",
+        "suv",
+        "coupe",
+        "truck",
+        "convertible",
+        "wagon",
+        "van",
+        "hatchback"
+      ],
+      "description": "Body style"
+    },
+    "exterior_color": {
+      "type": "string"
+    },
+    "interior_color": {
+      "type": "string"
+    },
+    "transmission": {
+      "type": "string",
+      "enum": [
+        "automatic",
+        "manual",
+        "cvt"
+      ],
+      "description": "Transmission type"
+    },
+    "fuel_type": {
+      "type": "string",
+      "enum": [
+        "gasoline",
+        "diesel",
+        "electric",
+        "hybrid",
+        "plug_in_hybrid"
+      ],
+      "description": "Fuel type"
+    },
+    "engine": {
+      "type": "string",
+      "description": "Engine specifications"
+    },
+    "drivetrain": {
+      "type": "string",
+      "enum": [
+        "fwd",
+        "rwd",
+        "awd",
+        "4wd"
+      ],
+      "description": "Drivetrain type"
+    },
+    "vin": {
+      "type": "string",
+      "description": "Vehicle Identification Number"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of features"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed vehicle description"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of image URLs"
+    },
+    "primary_image": {
+      "type": "string",
+      "description": "Main display image URL"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "Vehicle walkthrough video"
+    },
+    "has_360_view": {
+      "type": "boolean",
+      "default": false
+    },
+    "dealer_id": {
+      "type": "string",
+      "description": "Reference to dealer"
+    },
+    "dealer_name": {
+      "type": "string"
+    },
+    "location_city": {
+      "type": "string"
+    },
+    "location_state": {
+      "type": "string"
+    },
+    "location_zip": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "sold",
+        "archived"
+      ],
+      "default": "pending"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "views_count": {
+      "type": "number",
+      "default": 0
+    },
+    "quotes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "certification": {
+      "type": "string",
+      "description": "Certification details if any"
+    },
+    "warranty_info": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "make",
+    "model",
+    "year",
+    "price"
+  ]
+}

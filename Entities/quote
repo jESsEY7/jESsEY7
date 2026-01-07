@@ -1,0 +1,72 @@
+{
+  "name": "Quote",
+  "type": "object",
+  "properties": {
+    "vehicle_id": {
+      "type": "string",
+      "description": "Reference to vehicle"
+    },
+    "vehicle_title": {
+      "type": "string",
+      "description": "Vehicle make model year"
+    },
+    "vehicle_price": {
+      "type": "number"
+    },
+    "buyer_email": {
+      "type": "string"
+    },
+    "buyer_name": {
+      "type": "string"
+    },
+    "buyer_phone": {
+      "type": "string"
+    },
+    "buyer_zip": {
+      "type": "string",
+      "description": "Buyer's zip code for pricing"
+    },
+    "dealer_id": {
+      "type": "string"
+    },
+    "dealer_name": {
+      "type": "string"
+    },
+    "base_price": {
+      "type": "number"
+    },
+    "delivery_fee": {
+      "type": "number",
+      "description": "Calculated based on distance"
+    },
+    "taxes_estimate": {
+      "type": "number"
+    },
+    "total_drive_away": {
+      "type": "number",
+      "description": "Total drive-away price"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "viewed",
+        "contacted",
+        "converted",
+        "expired"
+      ],
+      "default": "pending"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "vehicle_id",
+    "buyer_zip"
+  ]
+}
