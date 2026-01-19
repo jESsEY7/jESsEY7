@@ -62,7 +62,7 @@ export default function Layout({ children, currentPageName }) {
               <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center transform hover:rotate-3 transition-transform duration-300 shadow-md">
                 <Car className="w-6 h-6 text-white" />
               </div>
-              <span className="font-bold text-2xl text-foreground tracking-tight">AutoElite</span>
+              <span className="font-bold text-2xl text-foreground tracking-tight">Motoris</span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -220,7 +220,7 @@ export default function Layout({ children, currentPageName }) {
                   <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center">
                     <Car className="w-6 h-6 text-white" />
                   </div>
-                  <span className="font-bold text-xl">AutoElite</span>
+                  <span className="font-bold text-xl">Motoris</span>
                 </div>
                 <p className="text-gray-400 text-sm">
                   Premium car marketplace with transparent, no-haggle pricing.
@@ -256,7 +256,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
-              <p>© {new Date().getFullYear()} AutoElite. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} Motoris. All rights reserved  by Jesweet.Inc .</p>
             </div>
           </div>
         </footer>

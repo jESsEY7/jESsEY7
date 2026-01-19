@@ -59,7 +59,7 @@ export default function LoginPage() {
                     <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center">
                         <Car className="w-6 h-6 text-white" />
                     </div>
-                    <span className="font-bold text-xl">AutoElite</span>
+                    <span className="font-bold text-xl">Motoris</span>
                 </div>
 
                 <div className="space-y-6 max-w-lg">
@@ -72,7 +72,7 @@ export default function LoginPage() {
                 </div>
 
                 <div className="text-sm text-gray-500">
-                    © {new Date().getFullYear()} AutoElite Inc.
+                    © {new Date().getFullYear()} Motoris Inc.
                 </div>
             </div>
 
