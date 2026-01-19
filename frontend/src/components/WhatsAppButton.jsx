@@ -21,7 +21,7 @@ export default function WhatsAppButton() {
         // Use the backend-provided URL if available, otherwise fallback
         // In a real app, this might come from a context or API call
         // For now, we'll hardcode the community link pattern or use the one from requirements
-        const communityUrl = "https://chat.whatsapp.com/your-invite-code";
+        const communityUrl = "https://chat.whatsapp.com/Cjv684RCXb75w6tZcxidhS";
 
         if (isMobile) {
             window.location.href = communityUrl;
