@@ -9,14 +9,14 @@ class VehicleSerializer(serializers.ModelSerializer):
     primary_image = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
     is_featured = serializers.SerializerMethodField()
-    dealer_name = serializers.CharField(source='seller.dealer_name', read_only=True)
+    dealer_name = serializers.CharField(source='seller.dealer_name', read_only=True, allow_null=True)
     
     # Map location from seller using business_address or defaults (as noted in plan)
     location_city = serializers.SerializerMethodField()
     location_state = serializers.SerializerMethodField()
 
     def get_price(self, obj):
-        if obj.current_price:
+        if hasattr(obj, 'current_price') and obj.current_price:
             return obj.current_price.amount
         return None
 
@@ -32,14 +32,20 @@ class VehicleSerializer(serializers.ModelSerializer):
         read_only_fields = ['created_at', 'updated_at']
 
     def get_primary_image(self, obj):
-        if obj.primary_image:
-            return obj.primary_image.image.url
-        # Fallback to first image if no primary marked
-        first = obj.images.first()
-        return first.image.url if first else None
+        try:
+            if obj.primary_image and obj.primary_image.image:
+                return obj.primary_image.image.url
+            # Fallback to first image if no primary marked
+            first = obj.images.first()
+            return first.image.url if first and first.image else None
+        except Exception:
+            return None
 
     def get_images(self, obj):
-        return [img.image.url for img in obj.images.all()]
+        try:
+            return [img.image.url for img in obj.images.all() if img.image]
+        except Exception:
+            return []
 
     def get_is_featured(self, obj):
         # Check if there is an active listing that is featured
