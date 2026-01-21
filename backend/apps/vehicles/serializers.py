@@ -5,7 +5,7 @@ from .models import VINLookupRecord, TestDrive, Offer
 
 class VehicleSerializer(serializers.ModelSerializer):
     # Adapter fields to match legacy Vehicle model expectations
-    price = serializers.DecimalField(source='current_price.amount', max_digits=12, decimal_places=2, read_only=True)
+    price = serializers.SerializerMethodField()
     primary_image = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
     is_featured = serializers.SerializerMethodField()
@@ -14,6 +14,11 @@ class VehicleSerializer(serializers.ModelSerializer):
     # Map location from seller using business_address or defaults (as noted in plan)
     location_city = serializers.SerializerMethodField()
     location_state = serializers.SerializerMethodField()
+
+    def get_price(self, obj):
+        if obj.current_price:
+            return obj.current_price.amount
+        return None
 
     class Meta:
         model = Car
