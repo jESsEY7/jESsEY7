@@ -71,56 +71,45 @@ export default function VehiclesPage() {
     toggleFavorite(vehicle.id);
   };
 
+  // Background Image Slideshow
+  const BACKGROUND_IMAGES = [
+    "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1920&q=80",
+    "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80",
+    "https://images.unsplash.com/photo-1503376763036-066120622c74?w=1920&q=80",
+    "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80"
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % BACKGROUND_IMAGES.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Browse Vehicles</h1>
-              <p className="text-gray-500 text-sm mt-1">
-                {sortedVehicles.length} vehicles available
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">Newest First</SelectItem>
-                  <SelectItem value="price_low">Price: Low to High</SelectItem>
-                  <SelectItem value="price_high">Price: High to Low</SelectItem>
-                  <SelectItem value="year_new">Year: Newest</SelectItem>
-                  <SelectItem value="year_old">Year: Oldest</SelectItem>
-                  <SelectItem value="mileage">Lowest Mileage</SelectItem>
-                </SelectContent>
-              </Select>
-              <div className="hidden sm:flex border rounded-lg">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  size="icon"
-                  onClick={() => setViewMode('grid')}
-                  className={viewMode === 'grid' ? 'bg-gray-900' : ''}
-                >
-                  <Grid3X3 className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  size="icon"
-                  onClick={() => setViewMode('list')}
-                  className={viewMode === 'list' ? 'bg-gray-900' : ''}
-                >
-                  <List className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen relative bg-black">
+      {/* Background Image Slideshow */}
+      <div className="fixed inset-0 z-0 select-none">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentImageIndex}
+            src={BACKGROUND_IMAGES[currentImageIndex]}
+            alt="Background"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.4 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay"
+          />
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/80" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-32">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar area (Contains Search + Filters) */}
           <aside className="w-full lg:w-80 flex-shrink-0">

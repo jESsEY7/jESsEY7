@@ -11,7 +11,13 @@ import {
   Building2, ArrowLeft, ArrowRight, CheckCircle2,
   Upload, Loader2, Shield, DollarSign, TrendingUp
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const BACKGROUND_IMAGES = [
+  "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1920&q=80",
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80",
+  "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1920&q=80"
+];
 
 export default function DealerSignupPage() {
   const { user, login } = useAuth();
@@ -31,8 +37,18 @@ export default function DealerSignupPage() {
     license_number: '',
     tax_id: '',
     description: '',
+    description: '',
     logo_url: ''
   });
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % BACKGROUND_IMAGES.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const init = async () => {
@@ -127,9 +143,26 @@ export default function DealerSignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen relative bg-black">
+      {/* Background Image Slideshow */}
+      <div className="fixed inset-0 z-0 select-none">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentImageIndex}
+            src={BACKGROUND_IMAGES[currentImageIndex]}
+            alt="Background"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.4 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay"
+          />
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/80" />
+      </div>
+
       {/* Hero Section */}
-      <div className="bg-gray-900 text-white py-20">
+      <div className="relative z-10 text-white py-20 pt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link to={createPageUrl('Home')} className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8">
             <ArrowLeft className="w-4 h-4" />
@@ -192,7 +225,7 @@ export default function DealerSignupPage() {
       </div>
 
       {/* Signup Form */}
-      <div className="max-w-3xl mx-auto px-4 py-16">
+      <div className="relative z-10 max-w-3xl mx-auto px-4 py-16">
         {!user ? (
           <Card>
             <CardContent className="p-8 text-center">
