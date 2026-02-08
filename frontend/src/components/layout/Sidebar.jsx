@@ -65,7 +65,7 @@ export default function Sidebar({ isOpen, onClose }) {
                                                 e.target.nextSibling.style.display = 'flex';
                                             }}
                                         />
-                                        <div className="hidden bg-gradient-to-br from-amber-500 to-amber-700 text-white w-8 h-8 rounded-lg items-center justify-center font-bold">M</div>
+                                        <div className="hidden bg-gradient-to-br from-amber-500 to-amber-700 text-white w-8 h-8 rounded-lg items-center justify-center font-bold">Motoris</div>
                                     </div>
                                 </Link>
                             </div>

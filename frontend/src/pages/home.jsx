@@ -201,7 +201,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-amber-400 to-amber-500">
+      {/* <section className="py-20 bg-gradient-to-br from-amber-400 to-amber-500">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
             Ready to Find Your Perfect Car?
@@ -224,7 +224,7 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Quote Modal */}
       <QuoteModal

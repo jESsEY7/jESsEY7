@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Universal Responsive Grid</title>
+
+<style>
+:root {
+  --space-xs: clamp(0.5rem, 1vw, 1rem);
+  --space-sm: clamp(1rem, 2vw, 2rem);
+  --space-md: clamp(1.5rem, 3vw, 3rem);
+  --radius: 0.75rem;
+
+  --bg: #0f172a;
+  --surface: #111827;
+  --text: #f9fafb;
+  --accent: #38bdf8;
+
+  --max-width: 90vw;
+}
+
+/* Reset + base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding:
+    env(safe-area-inset-top)
+    env(safe-area-inset-right)
+    env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
+/* Typography scale */
+
+h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 var(--space-sm); }
+h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); margin: 0 0 var(--space-xs); }
+p  { font-size: clamp(1rem, 2.5vw, 1.25rem); margin: 0; }
+
+/* Grid container */
+
+.app {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding: var(--space-md);
+  display: grid;
+  gap: var(--space-md);
+}
+
+/* Responsive auto grid */
+
+.grid {
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns:
+    repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+/* Card component */
+
+.card {
+  background: var(--surface);
+  padding: var(--space-sm);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 12vh;
+}
+
+.card strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Orientation handling */
+
+@media (orientation: landscape) {
+  .app {
+    grid-template-columns: 1fr 3fr;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    align-self: start;
+  }
+}
+
+/* Larger breakpoints scale density */
+
+@media (min-width: 48rem) {
+  .grid {
+    grid-template-columns:
+      repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  }
+}
+
+@media (min-width: 75rem) {
+  .app {
+    max-width: 80vw;
+  }
+}
+
+/* Accessibility focus */
+
+:focus-visible {
+  outline: 0.2rem solid var(--accent);
+  outline-offset: 0.2rem;
+}
+</style>
+</head>
+
+<body>
+
+<main class="app">
+  <header>
+    <h1>Adaptive Grid System</h1>
+    <p>Fluid layout optimized for every orientation and input mode.</p>
+  </header>
+
+  <section class="grid" id="grid">
+    <article class="card">
+      <h2>Readable</h2>
+      <p><strong>Generous spacing</strong> preserves clarity and scanability.</p>
+    </article>
+
+    <article class="card">
+      <h2>Fluid</h2>
+      <p>Grid columns expand and collapse without fixed dimensions.</p>
+    </article>
+
+    <article class="card">
+      <h2>Input Agnostic</h2>
+      <p>Touch, mouse, stylus, and keyboard share identical behavior.</p>
+    </article>
+
+    <article class="card">
+      <h2>Accessible</h2>
+      <p>High contrast and scalable typography meet WCAG targets.</p>
+    </article>
+  </section>
+</main>
+
+<script>
+const root = document.documentElement;
+
+function updateOrientationState() {
+  const portrait = window.matchMedia("(orientation: portrait)").matches;
+  root.dataset.orientation = portrait ? "portrait" : "landscape";
+}
+
+updateOrientationState();
+
+window.addEventListener("resize", updateOrientationState, { passive: true });
+window.addEventListener("orientationchange", updateOrientationState, { passive: true });
+</script>
+
+</body>
+</html>

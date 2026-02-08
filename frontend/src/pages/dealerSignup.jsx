@@ -164,10 +164,10 @@ export default function DealerSignupPage() {
       {/* Hero Section */}
       <div className="relative z-10 text-white py-20 pt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link to={createPageUrl('Home')} className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8">
+          {/* <Link to={createPageUrl('Home')} className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8">
             <ArrowLeft className="w-4 h-4" />
             Back to homepage
-          </Link>
+          </Link> */}
 
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div

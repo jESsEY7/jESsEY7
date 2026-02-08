@@ -75,8 +75,9 @@ export default function VehiclesPage() {
   const BACKGROUND_IMAGES = [
     "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1920&q=80",
     "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80",
-    "https://images.unsplash.com/photo-1503376763036-066120622c74?w=1920&q=80",
-    "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80"
+    "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&q=80",
+    "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80",
+    "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80"
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -89,7 +90,7 @@ export default function VehiclesPage() {
   }, []);
 
   return (
-    <div className="min-h-screen relative bg-black">
+    <div className="min-h-screen relative bg-blur">
       {/* Background Image Slideshow */}
       <div className="fixed inset-0 z-0 select-none">
         <AnimatePresence mode="wait">

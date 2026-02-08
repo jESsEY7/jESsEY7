@@ -13,7 +13,7 @@ export default function HeroSection({ featuredVehicle, onGetQuote }) {
   const BACKGROUND_IMAGES = [
     "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1920&q=80",
     "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80",
-    "https://images.unsplash.com/photo-1503376763036-066120622c74?w=1920&q=80",
+    // "https://unsplash.com/photos/black-jeep-grand-cherokee-srt-parked-on-street-kUlmTTQSMhc",
     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80"
   ];
 

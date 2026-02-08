@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { User, Search, Menu, Bell, Sun, Moon } from 'lucide-react';
+import { User, Menu, Bell, Sun, Moon } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/context/ThemeContext';
@@ -90,9 +90,9 @@ export default function FloatingNav({ toggleSidebar }) {
                                     }}
                                 />
                                 {/* Fallback Logo */}
-                                <div className="hidden bg-gradient-to-br from-amber-500 to-amber-700 text-white w-8 h-8 rounded-lg items-center justify-center font-bold tracking-tighter">
+                                {/* <div className="hidden bg-gradient-to-br from-amber-500 to-amber-700 text-white w-8 h-8 rounded-lg items-center justify-center font-bold tracking-tighter">
                                     M
-                                </div>
+                                </div> */}
                             </div>
                         </Link>
                     </div>
@@ -125,14 +125,6 @@ export default function FloatingNav({ toggleSidebar }) {
                             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                         </Button>
 
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-gray-600 hover:text-black hover:bg-black/5 rounded-full"
-                        >
-                            <Search className="w-5 h-5" />
-                        </Button>
-
                         {user ? (
                             <div className="flex items-center gap-2">
                                 <Link to="/favorites">
@@ -148,18 +140,11 @@ export default function FloatingNav({ toggleSidebar }) {
                                 </Link>
                             </div>
                         ) : (
-                            <div className="flex items-center gap-2">
-                                <Link to="/login">
-                                    <Button variant="ghost" className="text-gray-600 hover:text-black font-medium">
-                                        Log In
-                                    </Button>
-                                </Link>
-                                <Link to="/register">
-                                    <Button className="bg-amber-500 hover:bg-amber-600 text-white rounded-full px-6 shadow-lg shadow-amber-500/20">
-                                        Get Started
-                                    </Button>
-                                </Link>
-                            </div>
+                            <Link to="/register">
+                                <Button className="bg-amber-500 hover:bg-amber-600 text-white rounded-full px-6 shadow-lg shadow-amber-500/20">
+                                    Join
+                                </Button>
+                            </Link>
                         )}
                     </div>
                 </div>
