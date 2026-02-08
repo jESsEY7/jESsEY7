@@ -310,7 +310,7 @@ export default function RegisterPage() {
                                         id="username"
                                         value={formData.username}
                                         onChange={handleChange}
-                                        placeholder="johndoe"
+                                        placeholder="Username"
                                         required
                                         className="h-11"
                                     />
