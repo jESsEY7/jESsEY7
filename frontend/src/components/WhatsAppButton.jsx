@@ -18,15 +18,14 @@ export default function WhatsAppButton() {
 
     const handleClick = () => {
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        // Use the backend-provided URL if available, otherwise fallback
-        // In a real app, this might come from a context or API call
-        // For now, we'll hardcode the community link pattern or use the one from requirements
-        const communityUrl = "https://chat.whatsapp.com/Cjv684RCXb75w6tZcxidhS";
+        // Direct WhatsApp chat link (private conversation)
+        // Format: https://wa.me/<phone_number_without_plus>
+        const whatsappUrl = "https://wa.me/254704275682";
 
         if (isMobile) {
-            window.location.href = communityUrl;
+            window.location.href = whatsappUrl;
         } else {
-            window.open(communityUrl, '_blank');
+            window.open(whatsappUrl, '_blank');
         }
     };
 
@@ -53,13 +52,13 @@ export default function WhatsAppButton() {
                                     </button>
                                 </div>
                                 <p className="text-sm text-gray-600 mb-3">
-                                    Join our WhatsApp community for instant updates and support!
+                                    Chat with us on WhatsApp for instant support!
                                 </p>
                                 <Button
                                     onClick={handleClick}
                                     className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white"
                                 >
-                                    Join Community
+                                    Chat with Us
                                 </Button>
                             </motion.div>
                         )}
