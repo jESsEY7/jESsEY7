@@ -321,7 +321,7 @@ export default function RegisterPage() {
                                         id="full_name"
                                         value={formData.full_name}
                                         onChange={handleChange}
-                                        placeholder="Name"
+                                        placeholder="Full Name"
                                         className="h-11"
                                     />
                                 </div>
@@ -334,7 +334,7 @@ export default function RegisterPage() {
                                     type="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    placeholder="[EMAIL_ADDRESS]"
+                                    placeholder="Email Address"
                                     required
                                     className="h-11"
                                 />
@@ -347,7 +347,7 @@ export default function RegisterPage() {
                                     type="tel"
                                     value={formData.phone}
                                     onChange={handleChange}
-                                    placeholder="+254700123456"
+                                    placeholder="Phone Number"
                                     required
                                     className="h-11"
                                 />
