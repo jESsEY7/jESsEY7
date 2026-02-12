@@ -34,7 +34,7 @@ class FixedBunnyStorage(BunnyStorage):
 
     def _save(self, name, content):
         """
-        Override the default save to add a timeout, which is MISSING in the base library.
+        Override the default save to add a timeout and robust headers.
         """
         try:
             region = settings.BUNNY_REGION.lower() if settings.BUNNY_REGION else "de"
@@ -44,18 +44,27 @@ class FixedBunnyStorage(BunnyStorage):
                        "storage.bunnycdn.com"
             
             api_url = f"https://{base_api}/{settings.BUNNY_STORAGE_ZONE}/{name}"
+            
+            # Ensure we are at the start of the file
+            content.seek(0)
+            
             headers = {
                 "AccessKey": settings.BUNNY_STORAGE_API_KEY,
                 "Content-Type": "application/octet-stream",
+                "accept": "application/json"
             }
             
             logger.info(f"Saving to Bunny: {api_url}")
             # 30s timeout for the actual upload
             response = requests.put(api_url, data=content.read(), headers=headers, timeout=30)
-            response.raise_for_status()
+            
+            if response.status_code != 201 and response.status_code != 200:
+                logger.error(f"Bunny Storage rejection ({response.status_code}): {response.text}")
+                response.raise_for_status()
+                
             return name
         except Exception as e:
-            logger.error(f"BunnyStorage save failed: {e}")
+            logger.error(f"BunnyStorage save failed for {name}: {e}")
             raise
 
     def url(self, name):
