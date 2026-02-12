@@ -45,11 +45,16 @@ class FixedBunnyStorage(BunnyStorage):
             
             api_url = f"https://{base_api}/{settings.BUNNY_STORAGE_ZONE}/{name}"
             
+            # DIAGNOSTIC: Log masked key info to help user verify
+            key = settings.BUNNY_STORAGE_API_KEY or ""
+            masked_key = f"{key[:2]}...{key[-2:]}" if len(key) > 4 else "****"
+            logger.info(f"Storage Debug - Zone: {settings.BUNNY_STORAGE_ZONE}, KeyLength: {len(key)}, KeyMask: {masked_key}")
+            
             # Ensure we are at the start of the file
             content.seek(0)
             
             headers = {
-                "AccessKey": settings.BUNNY_STORAGE_API_KEY,
+                "AccessKey": key,
                 "Content-Type": "application/octet-stream",
                 "accept": "application/json"
             }
