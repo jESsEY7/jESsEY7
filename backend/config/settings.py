@@ -16,8 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings - use environment variables
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-prod')
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 
 # Application definition
@@ -175,6 +175,7 @@ if DEBUG:
 else:
     cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174')
     CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins.split(',') if origin.strip()]
+    CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'accept',
