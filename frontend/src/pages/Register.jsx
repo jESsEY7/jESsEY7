@@ -146,7 +146,7 @@ export default function RegisterPage() {
             });
 
             await login(formData.username, formData.password);
-            navigate('/');
+            navigate('/vehicles');
         } catch (err) {
             console.error('Registration error:', err);
             setError(err.message || 'Registration failed. Please try again.');

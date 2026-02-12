@@ -55,7 +55,7 @@ export default function LoginPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const redirectUrl = searchParams.get('redirect') || '/dashboard';
+    const redirectUrl = searchParams.get('redirect') || '/vehicles';
 
     const [formData, setFormData] = useState({
         username: '',
@@ -88,7 +88,7 @@ export default function LoginPage() {
 
         try {
             await login(formData.username, formData.password);
-            let targetPath = '/dashboard';
+            let targetPath = '/vehicles';
             if (redirectUrl) {
                 try {
                     const url = new URL(redirectUrl);
