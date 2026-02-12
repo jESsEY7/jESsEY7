@@ -16,8 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings - use environment variables
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-prod')
-DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+DEBUG = True  # Forced for debugging 400 error
+ALLOWED_HOSTS = ['*']
 
 # Trusted proxy headers for Bunny.net / Magic Containers
 USE_X_FORWARDED_HOST = True
