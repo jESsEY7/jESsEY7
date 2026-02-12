@@ -13,3 +13,4 @@ imagehash
 gunicorn
 whitenoise
 django-bunny-storage
+requests
