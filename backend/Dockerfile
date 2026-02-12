@@ -20,4 +20,4 @@ COPY . /app
 ENV PYTHONUNBUFFERED=1
 
 # Default command
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--timeout", "120", "--workers", "3"]
