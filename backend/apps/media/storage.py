@@ -46,10 +46,17 @@ class FixedBunnyStorage(BunnyStorage):
         """
         try:
             region = settings.BUNNY_REGION.lower() if settings.BUNNY_REGION else "de"
-            base_api = "ny.storage.bunnycdn.com" if region == "ny" else \
-                       "la.storage.bunnycdn.com" if region == "la" else \
-                       "sg.storage.bunnycdn.com" if region == "sg" else \
-                       "storage.bunnycdn.com"
+            
+            if region == "ny":
+                base_api = "ny.storage.bunnycdn.com"
+            elif region == "la":
+                base_api = "la.storage.bunnycdn.com"
+            elif region == "sg":
+                base_api = "sg.storage.bunnycdn.com"
+            elif region == "jh":
+                base_api = "jh.storage.bunnycdn.com"
+            else:
+                base_api = "storage.bunnycdn.com"
             
             api_url = f"https://{base_api}/{settings.BUNNY_STORAGE_ZONE}/{name}"
             
