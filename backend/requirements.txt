@@ -12,3 +12,4 @@ python-dotenv
 imagehash
 gunicorn
 whitenoise
+django-bunny-storage

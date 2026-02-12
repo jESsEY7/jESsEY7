@@ -116,6 +116,29 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Bunny.net Storage Configuration
+BUNNY_STORAGE_ZONE = os.environ.get('BUNNY_STORAGE_ZONE')
+BUNNY_STORAGE_API_KEY = os.environ.get('BUNNY_STORAGE_API_KEY')
+BUNNY_STORAGE_PULL_ZONE_URL = os.environ.get('BUNNY_STORAGE_PULL_ZONE_URL')
+
+if BUNNY_STORAGE_ZONE and BUNNY_STORAGE_API_KEY:
+    STORAGES = {
+        "default": {
+            "BACKEND": "apps.media.storage.FixedBunnyStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+    # Bunny storage uses these internally if defined
+    BUNNY_USERNAME = BUNNY_STORAGE_ZONE
+    BUNNY_PASSWORD = BUNNY_STORAGE_API_KEY
+    BUNNY_BASE_URL = BUNNY_STORAGE_PULL_ZONE_URL
+    BUNNY_REGION = os.environ.get('BUNNY_STORAGE_REGION', 'ny')
+    if not BUNNY_BASE_URL.endswith('/'):
+        BUNNY_BASE_URL += '/'
+    MEDIA_URL = BUNNY_BASE_URL
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
