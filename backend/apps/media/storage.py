@@ -29,17 +29,25 @@ class FixedBunnyStorage(BunnyStorage):
             
             api_url = f"https://{base_api}/{settings.BUNNY_STORAGE_ZONE}/{name}"
             
+            logger.info(f"Checking Bunny storage: {api_url}")
+            print(f"BUNNY_DEBUG: Checking {api_url}")
+            
             headers = {
                 "AccessKey": settings.BUNNY_STORAGE_API_KEY,
                 "accept": "*/*"
             }
             
-            # HEAD request with shorter timeout for the check
-            response = requests.head(api_url, headers=headers, timeout=10)
+            # AGGRESSIVE timeout to prevent worker kills
+            response = requests.head(api_url, headers=headers, timeout=3)
+            logger.info(f"Bunny existence response for {name}: {response.status_code}")
             return response.status_code == 200
+        except requests.exceptions.Timeout:
+            logger.warning(f"BunnyStorage TIMEOUT for {name}. Assuming False to proceed.")
+            print(f"BUNNY_DEBUG: TIMEOUT for {name}")
+            return False
         except Exception as e:
-            logger.warning(f"BunnyStorage existence check failed for {name}: {e}")
-            # Fail to False (assume it doesn't exist) to avoid Django's infinite loop in get_available_name
+            logger.warning(f"BunnyStorage error for {name}: {e}")
+            print(f"BUNNY_DEBUG: Error {e}")
             return False
 
     def url(self, name):
