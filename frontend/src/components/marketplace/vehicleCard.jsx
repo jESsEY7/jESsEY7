@@ -5,41 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, MapPin, Gauge, Fuel, Shield, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-/**
- * Get full image URL from backend response
- * Handles relative URLs by prepending backend base URL
- * Returns null if no valid URL (no static fallbacks)
- */
 const getImageUrl = (imageUrl) => {
   if (!imageUrl) return null;
-
-  // Handle object with .image property (from serializer)
   const url = typeof imageUrl === 'object' ? imageUrl.image : imageUrl;
   if (!url) return null;
-
-  // Already absolute URL
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url;
-  }
-
-  // Relative URL - prepend backend base URL
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
   const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8002';
   return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
 export default function VehicleCard({ vehicle, onFavorite, isFavorited }) {
-  // Format mileage with locale
-  const formatMileage = (km) => {
-    if (!km) return '0';
-    return new Intl.NumberFormat('en-KE').format(km);
-  };
-
-  // Calculate monthly payment estimate
+  const formatMileage = (km) => km ? new Intl.NumberFormat('en-KE').format(km) : '0';
   const monthlyPayment = vehicle.price ? Math.round(vehicle.price / 60) : 0;
-
-  // Get primary image from backend data only (no static fallback)
-  const primaryImage = getImageUrl(vehicle.primary_image) ||
-    getImageUrl(vehicle.images?.[0]);
+  const primaryImage = getImageUrl(vehicle.primary_image) || getImageUrl(vehicle.images?.[0]);
 
   return (
     <motion.div
@@ -47,24 +25,23 @@ export default function VehicleCard({ vehicle, onFavorite, isFavorited }) {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="group bg-card text-card-foreground rounded-2xl overflow-hidden shadow-sm hover:shadow-xl dark:shadow-none dark:hover:shadow-lg dark:hover:shadow-amber-900/10 transition-all duration-300 border border-border"
+      className="group bg-white/5 backdrop-blur-md text-white rounded-2xl overflow-hidden shadow-xl hover:shadow-amber-500/10 transition-all duration-300 border border-white/10 flex flex-col h-full"
     >
       <Link to={`/vehicles/${vehicle.id}`}>
-        <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+        <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
           {primaryImage ? (
             <img
               src={primaryImage}
               alt={`${vehicle.make} ${vehicle.model}`}
-              className={`w-full h-full object-cover transition-transform duration-700 ${vehicle.status === 'sold' ? 'grayscale opacity-75' : 'group-hover:scale-110'
-                }`}
+              loading="lazy"
+              className={`w-full h-full object-cover transition-transform duration-700 ${vehicle.status === 'sold' ? 'grayscale opacity-75' : 'group-hover:scale-110'}`}
               onError={(e) => {
-                // Hide broken image, show placeholder state
                 e.target.style.display = 'none';
                 e.target.parentElement.classList.add('flex', 'items-center', 'justify-center');
               }}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+            <div className="w-full h-full flex items-center justify-center text-white/20">
               <div className="text-center">
                 <AlertCircle className="w-8 h-8 mx-auto mb-1 opacity-50" />
                 <p className="text-xs">No image</p>
@@ -114,41 +91,38 @@ export default function VehicleCard({ vehicle, onFavorite, isFavorited }) {
               e.stopPropagation();
               onFavorite?.(vehicle);
             }}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 hover:bg-white dark:hover:bg-black/80 backdrop-blur-sm flex items-center justify-center shadow-lg transition-all active:scale-95 z-20"
+            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 dark:bg-black/40 hover:bg-white/20 dark:hover:bg-black/60 backdrop-blur-sm flex items-center justify-center shadow-lg transition-all active:scale-95 z-20"
           >
-            <Heart
-              className={`w-5 h-5 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-400 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400'
-                }`}
-            />
+            <Heart className={`w-5 h-5 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : 'text-white/60 hover:text-red-500'}`} />
           </button>
         </div>
       </Link>
 
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-1">
         <Link to={`/vehicles/${vehicle.id}`}>
           <div className="mb-1">
-            <h3 className="text-xl font-bold text-card-foreground leading-tight group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">
+            <h3 className="text-xl font-bold text-white leading-tight group-hover:text-amber-500 transition-colors">
               {vehicle.make} {vehicle.model}
             </h3>
-            <p className="text-sm text-muted-foreground font-medium mt-1">
+            <p className="text-sm text-white/50 font-medium mt-1">
               {vehicle.year} • {vehicle.trim || vehicle.body_type || 'Base'}
             </p>
           </div>
         </Link>
 
         {/* Specs Grid */}
-        <div className="grid grid-cols-2 gap-y-2 gap-x-4 mt-4 py-4 border-t border-border">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+        <div className="grid grid-cols-2 gap-y-2 gap-x-4 mt-4 py-4 border-t border-white/10">
+          <div className="flex items-center gap-2 text-sm text-white/60 group-hover:text-white transition-colors">
             <Gauge className="w-4 h-4 text-amber-500/70 shrink-0" />
             <span className="truncate">{formatMileage(vehicle.mileage)} km</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+          <div className="flex items-center gap-2 text-sm text-white/60 group-hover:text-white transition-colors">
             <Fuel className="w-4 h-4 text-amber-500/70 shrink-0" />
             <span className="capitalize truncate">
               {vehicle.fuel_type?.replace('_', ' ') || 'Petrol'}
             </span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors col-span-2">
+          <div className="flex items-center gap-2 text-sm text-white/60 group-hover:text-white transition-colors col-span-2">
             <MapPin className="w-4 h-4 text-amber-500/70 shrink-0" />
             <span className="truncate">
               {vehicle.location_city || 'Nairobi'}, {vehicle.location_state || 'Kenya'}
@@ -156,20 +130,14 @@ export default function VehicleCard({ vehicle, onFavorite, isFavorited }) {
           </div>
         </div>
 
-        <div className="flex items-end justify-between mt-2 pt-2">
+        <div className="flex items-end justify-between mt-auto pt-2">
           <div>
-            <p className="text-xs text-muted-foreground uppercase font-semibold tracking-wider mb-0.5">
-              No-Haggle Price
-            </p>
-            <p className="text-2xl font-bold text-amber-600 dark:text-amber-500 tracking-tight">
-              {formatCurrency(vehicle.price)}
-            </p>
+            <p className="text-[10px] text-white/40 uppercase font-bold tracking-widest mb-0.5">Price</p>
+            <p className="text-2xl font-black text-amber-500 tracking-tight">{formatCurrency(vehicle.price)}</p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-muted-foreground">Est. Payment</p>
-            <p className="text-sm font-semibold text-foreground">
-              {formatCurrency(monthlyPayment)}/mo
-            </p>
+            <p className="text-[10px] text-white/40 uppercase font-bold tracking-widest mb-0.5">Est. Payment</p>
+            <p className="text-sm font-bold text-white">{formatCurrency(monthlyPayment)}/mo</p>
           </div>
         </div>
       </div>

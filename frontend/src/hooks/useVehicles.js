@@ -9,6 +9,7 @@ export const vehicleKeys = {
     details: () => [...vehicleKeys.all, 'detail'],
     detail: (id) => [...vehicleKeys.details(), id],
     featured: () => [...vehicleKeys.all, 'featured'],
+    facets: (params) => [...vehicleKeys.all, 'facets', params],
     recommendations: (userId) => [...vehicleKeys.all, 'recommendations', userId],
 };
 
@@ -20,10 +21,26 @@ export const useVehicles = (params = {}) => {
         queryKey: vehicleKeys.list(params),
         queryFn: async () => {
             const response = await client.get('/vehicles/vehicles/', { params });
+            // API returns { count, next, previous, results } for paginated responses
             return response.data;
         },
         staleTime: 1000 * 60 * 2, // 2 minutes
         refetchOnWindowFocus: true,
+        keepPreviousData: true, // Keep data while fetching new page
+    });
+};
+
+/**
+ * Fetch vehicle facets for filtering
+ */
+export const useFacets = (params = {}) => {
+    return useQuery({
+        queryKey: vehicleKeys.facets(params),
+        queryFn: async () => {
+            const response = await client.get('/vehicles/vehicles/facets/', { params });
+            return response.data;
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 };
 

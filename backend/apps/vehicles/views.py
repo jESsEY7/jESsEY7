@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 # Import new models
-from apps.users.models import Car, Listing, CarImage, InspectionReport, Inquiry
+from apps.users.models import Car, Listing, CarImage, InspectionReport, Inquiry, Price
 # Import legacy models if needed (assuming VINLookupRecord/TestDrive/Offer are still in vehicles/models.py as they were not in users)
 from .models import VINLookupRecord, Offer, TestDrive
 
@@ -16,52 +16,54 @@ from .serializers import (
 )
 
 
+
+class VehicleFilter(dj_filters.FilterSet):
+    min_price = dj_filters.NumberFilter(field_name="prices__amount", lookup_expr='gte', label='Min Price')
+    max_price = dj_filters.NumberFilter(field_name="prices__amount", lookup_expr='lte', label='Max Price')
+    min_year = dj_filters.NumberFilter(field_name="year", lookup_expr='gte')
+    max_year = dj_filters.NumberFilter(field_name="year", lookup_expr='lte')
+    make = dj_filters.CharFilter(lookup_expr='icontains')
+    model = dj_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Car
+        fields = ['make', 'model', 'year', 'condition', 'body_type', 'fuel_type', 'status', 'transmission']
+
+
 class VehicleViewSet(viewsets.ModelViewSet):
     queryset = Car.objects.all().order_by('-created_at')
     serializer_class = VehicleSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    # Adapted filters to Car model fields
-    filterset_fields = {
-        'make': ['exact', 'icontains'],
-        'model': ['exact', 'icontains'],
-        'year': ['exact', 'gte', 'lte'],
-        'mileage': ['lte'], # Car doesn't have price directly on it anymore, handled in get_queryset or custom filter? 
-        # Car model has current_price property but we can't filter on property easily in DB.
-        # We need to filter on related Prices.
-        'condition': ['exact'],
-        'body_type': ['exact'],
-        'fuel_type': ['exact'],
-        'status': ['exact'],
-    }
-    search_fields = ['make', 'model', 'description', 'features']
+    filterset_class = VehicleFilter
+    search_fields = ['make', 'model', 'description', 'features', 'title']
     ordering_fields = ['year', 'mileage', 'created_at', 'updated_at']
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        # Handle price filtering manually since it's a related model
-        min_price = self.request.query_params.get('price__gte')
-        max_price = self.request.query_params.get('price__lte')
+        return super().get_queryset().distinct()
+
+    @action(detail=False, methods=['get'])
+    def facets(self, request):
+        """Return counts for filters to enable faceted search."""
+        from django.db.models import Count, Min, Max
         
-        if min_price or max_price:
-            # Filter cars that have an active price in range
-            price_filter = {'active': True}
-            if min_price:
-                price_filter['amount__gte'] = min_price
-            if max_price:
-                price_filter['amount__lte'] = max_price
-            
-            qs = qs.filter(prices__match=price_filter) # Pseudo code explaination, doing actual below
-            # Correct Django syntax:
-            if min_price:
-                qs = qs.filter(prices__active=True, prices__amount__gte=min_price)
-            if max_price:
-                qs = qs.filter(prices__active=True, prices__amount__lte=max_price)
-            
-            qs = qs.distinct()
-            
-        return qs
+        # Apply current filters to determine what options are available for the *current* result set
+        qs = self.filter_queryset(self.get_queryset())
+        
+        facets = {
+            'makes': list(qs.values('make').annotate(count=Count('id')).order_by('-count')),
+            'body_types': list(qs.values('body_type').annotate(count=Count('id')).order_by('-count')),
+            'fuel_types': list(qs.values('fuel_type').annotate(count=Count('id')).order_by('-count')),
+            'conditions': list(qs.values('condition').annotate(count=Count('id')).order_by('-count')),
+            'years': list(qs.values('year').annotate(count=Count('id')).order_by('-year')),
+            'transmissions': list(qs.values('transmission').annotate(count=Count('id')).order_by('-count')),
+            'price_range': {
+                'min': Price.objects.filter(active=True).aggregate(min=Min('amount'))['min'],
+                'max': Price.objects.filter(active=True).aggregate(max=Max('amount'))['max']
+            }
+        }
+        return Response(facets)
 
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:
@@ -128,7 +130,7 @@ class ListingViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = ListingFilter
     search_fields = ['car__make', 'car__model'] # Adapted
-    ordering_fields = ['created_at'] # Price ordering is hard on related multifield, skipping for now
+    ordering_fields = ['created_at', 'car__year', 'car__prices__amount'] # Added more ordering fields
 
     def perform_create(self, serializer):
         serializer.save()

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useVehicles } from '@/hooks/useVehicles';
 import { useFavorites } from '@/hooks/useFavorites';
+import SEO from '@/components/SEO';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,6 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function VehiclesPage() {
   const { user } = useAuth();
+  const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState('grid');
   const [sortBy, setSortBy] = useState('newest');
   const [quoteModal, setQuoteModal] = useState({ open: false, vehicle: null });
@@ -30,18 +32,18 @@ export default function VehiclesPage() {
     fuelType: '',
     condition: '',
     minPrice: 0,
-    maxPrice: 500000,
-    minYear: 2015,
+    maxPrice: 10000000,
+    minYear: 2000,
     maxYear: 2025,
-    maxMileage: 200000,
+    maxMileage: 300000,
     location: ''
   });
 
   // Construct API params from filters
   const apiParams = {
-    // Backend uses created_at, year, mileage as ordering fields
-    ordering: sortBy === 'price_low' ? 'year' :
-      sortBy === 'price_high' ? '-year' :
+    page,
+    ordering: sortBy === 'price_low' ? 'prices__amount' :
+      sortBy === 'price_high' ? '-prices__amount' :
         sortBy === 'year_new' ? '-year' :
           sortBy === 'year_old' ? 'year' :
             sortBy === 'mileage' ? 'mileage' :
@@ -51,17 +53,21 @@ export default function VehiclesPage() {
     body_type: filters.bodyType || undefined,
     fuel_type: filters.fuelType || undefined,
     condition: filters.condition || undefined,
-    // Use backend-compatible price filtering
-    price__gte: filters.minPrice > 0 ? filters.minPrice : undefined,
-    price__lte: filters.maxPrice < 500000 ? filters.maxPrice : undefined,
-    year__gte: filters.minYear > 2015 ? filters.minYear : undefined,
-    year__lte: filters.maxYear < 2025 ? filters.maxYear : undefined,
-    mileage__lte: filters.maxMileage < 200000 ? filters.maxMileage : undefined,
+    min_price: filters.minPrice > 0 ? filters.minPrice : undefined,
+    max_price: filters.maxPrice < 10000000 ? filters.maxPrice : undefined,
+    min_year: filters.minYear > 2000 ? filters.minYear : undefined,
+    max_year: filters.maxYear < 2025 ? filters.maxYear : undefined,
+    mileage__lte: filters.maxMileage < 300000 ? filters.maxMileage : undefined,
   };
 
-  const { data: vehiclesData, isLoading } = useVehicles(apiParams);
-  const vehicles = vehiclesData?.results || vehiclesData || [];
-  const sortedVehicles = vehicles; // Sorting is handled by API now
+  const { data: vehiclesData, isLoading, isFetching } = useVehicles(apiParams);
+  const vehicles = vehiclesData?.results || [];
+  const totalCount = vehiclesData?.count || 0;
+
+  // Handing page reset on filter change
+  useEffect(() => {
+    setPage(1);
+  }, [filters, sortBy]);
 
   const handleFavorite = async (vehicle) => {
     if (!user) {
@@ -91,6 +97,10 @@ export default function VehiclesPage() {
 
   return (
     <div className="min-h-screen relative bg-blur">
+      <SEO
+        title={filters.make ? `${filters.make} Cars` : 'Browse Vehicles'}
+        description={`Explore our collection of premium vehicles ${filters.make ? `from ${filters.make}` : ''} at SeekHeaven.`}
+      />
       {/* Background Image Slideshow */}
       <div className="fixed inset-0 z-0 select-none">
         <AnimatePresence mode="wait">
@@ -108,17 +118,18 @@ export default function VehiclesPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/80" />
       </div>
 
-
-
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-32">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar area (Contains Search + Filters) */}
           <aside className="w-full lg:w-80 flex-shrink-0">
-            <SearchFilters
-              filters={filters}
-              onFilterChange={setFilters}
-              totalResults={sortedVehicles.length}
-            />
+            <div className="sticky top-28">
+              <SearchFilters
+                filters={filters}
+                onFilterChange={setFilters}
+                totalResults={totalCount}
+                apiParams={apiParams}
+              />
+            </div>
           </aside>
 
           {/* Vehicle Grid */}
@@ -126,36 +137,65 @@ export default function VehiclesPage() {
             {isLoading ? (
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {Array(6).fill(0).map((_, i) => (
-                  <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse">
-                    <div className="aspect-[4/3] bg-gray-200" />
+                  <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden animate-pulse">
+                    <div className="aspect-[4/3] bg-white/5" />
                     <div className="p-5 space-y-3">
-                      <div className="h-5 bg-gray-200 rounded w-3/4" />
-                      <div className="h-4 bg-gray-200 rounded w-1/2" />
-                      <div className="h-8 bg-gray-200 rounded w-1/3" />
+                      <div className="h-5 bg-white/5 rounded w-3/4" />
+                      <div className="h-4 bg-white/5 rounded w-1/2" />
+                      <div className="h-8 bg-white/5 rounded w-1/3" />
                     </div>
                   </div>
                 ))}
               </div>
-            ) : sortedVehicles.length > 0 ? (
-              <motion.div
-                layout
-                className={
-                  viewMode === 'grid'
-                    ? 'grid sm:grid-cols-2 xl:grid-cols-3 gap-6'
-                    : 'space-y-4'
-                }
-              >
-                <AnimatePresence>
-                  {sortedVehicles.map((vehicle) => (
-                    <VehicleCard
-                      key={vehicle.id}
-                      vehicle={vehicle}
-                      onFavorite={handleFavorite}
-                      isFavorited={isFavorited(vehicle.id)}
-                    />
-                  ))}
-                </AnimatePresence>
-              </motion.div>
+            ) : vehicles.length > 0 ? (
+              <div className="space-y-8">
+                <motion.div
+                  layout
+                  className={
+                    viewMode === 'grid'
+                      ? 'grid sm:grid-cols-2 xl:grid-cols-3 gap-6'
+                      : 'space-y-4'
+                  }
+                >
+                  <AnimatePresence>
+                    {vehicles.map((vehicle) => (
+                      <VehicleCard
+                        key={vehicle.id}
+                        vehicle={vehicle}
+                        onFavorite={handleFavorite}
+                        isFavorited={isFavorited(vehicle.id)}
+                      />
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
+
+                {/* Pagination */}
+                {vehiclesData?.count > vehicles.length && (
+                  <div className="flex justify-center pt-4">
+                    <div className="flex items-center gap-4">
+                      <Button
+                        variant="outline"
+                        disabled={page === 1}
+                        onClick={() => setPage(p => Math.max(1, p - 1))}
+                        className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+                      >
+                        Previous
+                      </Button>
+                      <span className="text-white/70 text-sm">
+                        Page {page} of {Math.ceil(totalCount / 12)}
+                      </span>
+                      <Button
+                        variant="outline"
+                        disabled={page * 12 >= totalCount}
+                        onClick={() => setPage(p => p + 1)}
+                        className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="text-center py-20 bg-white rounded-2xl border-2 border-dashed border-gray-200">
                 <p className="text-gray-500 text-lg">No vehicles match your filters</p>
@@ -163,19 +203,22 @@ export default function VehiclesPage() {
                 <Button
                   variant="outline"
                   className="mt-4"
-                  onClick={() => setFilters({
-                    search: '',
-                    make: '',
-                    bodyType: '',
-                    fuelType: '',
-                    condition: '',
-                    minPrice: 0,
-                    maxPrice: 500000,
-                    minYear: 2015,
-                    maxYear: 2025,
-                    maxMileage: 200000,
-                    location: ''
-                  })}
+                  onClick={() => {
+                    setFilters({
+                      search: '',
+                      make: '',
+                      bodyType: '',
+                      fuelType: '',
+                      condition: '',
+                      minPrice: 0,
+                      maxPrice: 10000000,
+                      minYear: 2000,
+                      maxYear: 2025,
+                      maxMileage: 300000,
+                      location: ''
+                    });
+                    setPage(1);
+                  }}
                 >
                   Clear All Filters
                 </Button>

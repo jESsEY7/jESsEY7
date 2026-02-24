@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import Layout from '@/components/Layout';
@@ -159,18 +160,20 @@ function AppRoutes() {
 
 function App() {
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-          <AuthProvider>
-            <Router>
-              <AppRoutes />
-            </Router>
-          </AuthProvider>
-        </ThemeProvider>
-        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <HelmetProvider>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+            <AuthProvider>
+              <Router>
+                <AppRoutes />
+              </Router>
+            </AuthProvider>
+          </ThemeProvider>
+          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </HelmetProvider>
   );
 }
 

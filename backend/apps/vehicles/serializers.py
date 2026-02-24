@@ -52,11 +52,10 @@ class VehicleSerializer(serializers.ModelSerializer):
         return obj.listings.filter(is_active=True, featured=True).exists()
 
     def get_location_city(self, obj):
-        # Placeholder parsing from seller address or default
-        # Assuming address format "City, State" or just returning user city if added later
-        return "Nairobi" # Default for now as per context (Kenya currency implied in models)
+        return obj.seller.business_address.split(',')[0] if obj.seller and obj.seller.business_address else "Nairobi"
 
     def get_location_state(self, obj):
+        # Fallback to Kenya if not parsable
         return "Kenya"
 
 
