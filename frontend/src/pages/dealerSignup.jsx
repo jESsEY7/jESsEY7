@@ -37,7 +37,6 @@ export default function DealerSignupPage() {
     license_number: '',
     tax_id: '',
     description: '',
-    description: '',
     logo_url: ''
   });
 

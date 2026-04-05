@@ -85,8 +85,12 @@ export default function FloatingNav({ toggleSidebar }) {
                                     className="w-full h-full object-contain mix-blend-multiply"
                                     onError={(e) => {
                                         // Fallback if image fails
-                                        e.target.style.display = 'none';
-                                        e.target.nextSibling.style.display = 'flex';
+                                        if (e.target) {
+                                            e.target.style.display = 'none';
+                                            if (e.target.nextSibling) {
+                                                e.target.nextSibling.style.display = 'flex';
+                                            }
+                                        }
                                     }}
                                 />
                                 {/* Fallback Logo */}

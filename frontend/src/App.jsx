@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { CompareProvider } from '@/context/CompareContext';
 import Layout from '@/components/Layout';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -165,9 +166,11 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <AuthProvider>
-              <Router>
-                <AppRoutes />
-              </Router>
+              <CompareProvider>
+                <Router>
+                  <AppRoutes />
+                </Router>
+              </CompareProvider>
             </AuthProvider>
           </ThemeProvider>
           {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}

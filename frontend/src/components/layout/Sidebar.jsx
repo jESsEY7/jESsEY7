@@ -61,8 +61,12 @@ export default function Sidebar({ isOpen, onClose }) {
                                             alt="Motoris"
                                             className="w-full h-full object-contain mix-blend-multiply"
                                             onError={(e) => {
-                                                e.target.style.display = 'none';
-                                                e.target.nextSibling.style.display = 'flex';
+                                                if (e.target) {
+                                                    e.target.style.display = 'none';
+                                                    if (e.target.nextSibling) {
+                                                        e.target.nextSibling.style.display = 'flex';
+                                                    }
+                                                }
                                             }}
                                         />
                                         <div className="hidden bg-gradient-to-br from-amber-500 to-amber-700 text-white w-8 h-8 rounded-lg items-center justify-center font-bold">Motoris</div>

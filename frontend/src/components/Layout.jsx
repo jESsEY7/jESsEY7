@@ -10,6 +10,7 @@ import {
 import WhatsAppButton from './WhatsAppButton';
 import FloatingNav from './layout/FloatingNav';
 import Sidebar from './layout/Sidebar';
+import CompareBar from './marketplace/CompareBar';
 
 export default function Layout({ children, currentPageName }) {
   const { user, logout } = useAuth();
@@ -47,8 +48,12 @@ export default function Layout({ children, currentPageName }) {
                       alt="Motoris"
                       className="w-full h-full object-contain mix-blend-multiply dark:brightness-200 transition-all duration-300"
                       onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
+                        if (e.target) {
+                          e.target.style.display = 'none';
+                          if (e.target.nextSibling) {
+                            e.target.nextSibling.style.display = 'flex';
+                          }
+                        }
                       }}
                     />
                     <div className="hidden bg-gradient-to-br from-amber-500 to-amber-700 rounded-lg items-center justify-center w-8 h-8">
@@ -96,6 +101,7 @@ export default function Layout({ children, currentPageName }) {
         </footer>
       )}
       <WhatsAppButton />
+      <CompareBar />
     </div>
   );
 }

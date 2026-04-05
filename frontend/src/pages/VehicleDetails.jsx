@@ -126,7 +126,9 @@ export default function VehicleDetailsPage() {
                                 alt={`${vehicle.make} ${vehicle.model}`}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
-                                    e.target.style.display = 'none';
+                                    if (e.target) {
+                                        e.target.style.display = 'none';
+                                    }
                                 }}
                             />
                         ) : (

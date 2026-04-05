@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '@/utils';
 import { Badge } from "@/components/ui/badge";
-import { Heart, MapPin, Gauge, Fuel, Shield, AlertCircle } from 'lucide-react';
+import { Heart, MapPin, Gauge, Fuel, Shield, AlertCircle, ArrowRightLeft } from 'lucide-react';
+import { useCompare } from '@/context/CompareContext';
 import { motion } from 'framer-motion';
 
 const getImageUrl = (imageUrl) => {
@@ -15,6 +16,8 @@ const getImageUrl = (imageUrl) => {
 };
 
 export default function VehicleCard({ vehicle, onFavorite, isFavorited }) {
+  const { toggleCompare, isInCompare } = useCompare();
+  const isCompared = isInCompare(vehicle.id);
   const formatMileage = (km) => km ? new Intl.NumberFormat('en-KE').format(km) : '0';
   const monthlyPayment = vehicle.price ? Math.round(vehicle.price / 60) : 0;
   const primaryImage = getImageUrl(vehicle.primary_image) || getImageUrl(vehicle.images?.[0]);
@@ -36,8 +39,12 @@ export default function VehicleCard({ vehicle, onFavorite, isFavorited }) {
               loading="lazy"
               className={`w-full h-full object-cover transition-transform duration-700 ${vehicle.status === 'sold' ? 'grayscale opacity-75' : 'group-hover:scale-110'}`}
               onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.parentElement.classList.add('flex', 'items-center', 'justify-center');
+                if (e.target) {
+                  e.target.style.display = 'none';
+                  if (e.target.parentElement) {
+                    e.target.parentElement.classList.add('flex', 'items-center', 'justify-center');
+                  }
+                }
               }}
             />
           ) : (
@@ -84,17 +91,35 @@ export default function VehicleCard({ vehicle, onFavorite, isFavorited }) {
             )}
           </div>
 
-          {/* Favorite button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onFavorite?.(vehicle);
-            }}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 dark:bg-black/40 hover:bg-white/20 dark:hover:bg-black/60 backdrop-blur-sm flex items-center justify-center shadow-lg transition-all active:scale-95 z-20"
-          >
-            <Heart className={`w-5 h-5 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : 'text-white/60 hover:text-red-500'}`} />
-          </button>
+          {/* Performance Actions */}
+          <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
+            {/* Favorite button */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onFavorite?.(vehicle);
+              }}
+              className="w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-sm flex items-center justify-center shadow-lg transition-all active:scale-95 border border-white/10"
+              title={isFavorited ? "Remove from Favorites" : "Add to Favorites"}
+            >
+              <Heart className={`w-4.5 h-4.5 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : 'text-white/70 hover:text-red-500'}`} />
+            </button>
+
+            {/* Compare button */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleCompare(vehicle);
+              }}
+              className={`w-9 h-9 rounded-full backdrop-blur-sm flex items-center justify-center shadow-lg transition-all active:scale-95 border border-white/10 ${isCompared ? 'bg-amber-500 text-black' : 'bg-black/40 hover:bg-black/60 text-white/70 hover:text-amber-500'
+                }`}
+              title={isCompared ? "Remove from Compare" : "Add to Compare"}
+            >
+              <ArrowRightLeft className="w-4.5 h-4.5" />
+            </button>
+          </div>
         </div>
       </Link>
 
