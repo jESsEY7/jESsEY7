@@ -65,11 +65,11 @@ export default function SearchFilters({ filters, onFilterChange, totalResults, a
       {/* Make */}
       <div>
         <div className="flex justify-between items-center mb-1.5">
-          <Label className="text-sm font-medium text-white/80">Make</Label>
-          {isLoadingFacets && <Loader2 className="w-3 h-3 animate-spin text-white/40" />}
+          <Label className="text-sm font-semibold text-slate-700 dark:text-zinc-400">Make</Label>
+          {isLoadingFacets && <Loader2 className="w-3 h-3 animate-spin text-amber-500" />}
         </div>
         <Select value={localFilters.make} onValueChange={(v) => handleChange('make', v === 'all' ? '' : v)}>
-          <SelectTrigger className="h-10 rounded-xl border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors">
+          <SelectTrigger className="h-10 rounded-xl border-border bg-card text-foreground hover:bg-muted/50 transition-colors">
             <SelectValue placeholder="All Makes" />
           </SelectTrigger>
           <SelectContent className="bg-zinc-900 border-white/10 text-white">
@@ -88,9 +88,9 @@ export default function SearchFilters({ filters, onFilterChange, totalResults, a
 
       {/* Body Type */}
       <div>
-        <Label className="text-sm font-medium text-white/80">Body Type</Label>
+        <Label className="text-sm font-semibold text-slate-700 dark:text-zinc-400">Body Type</Label>
         <Select value={localFilters.bodyType} onValueChange={(v) => handleChange('bodyType', v === 'all' ? '' : v)}>
-          <SelectTrigger className="mt-1.5 h-10 rounded-xl border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors">
+          <SelectTrigger className="mt-1.5 h-10 rounded-xl border-border bg-card text-foreground hover:bg-muted/50 transition-colors">
             <SelectValue placeholder="All Types" />
           </SelectTrigger>
           <SelectContent className="bg-zinc-900 border-white/10 text-white">
@@ -109,7 +109,7 @@ export default function SearchFilters({ filters, onFilterChange, totalResults, a
 
       {/* Price Range */}
       <div>
-        <Label className="text-sm font-medium text-white/80">Price Range</Label>
+        <Label className="text-sm font-semibold text-slate-700 dark:text-zinc-400">Price Range</Label>
         <div className="mt-3 px-2">
           <Slider
             value={[localFilters.minPrice || 0, localFilters.maxPrice || 10000000]}
@@ -122,7 +122,7 @@ export default function SearchFilters({ filters, onFilterChange, totalResults, a
             }}
             className="mt-2"
           />
-          <div className="flex justify-between text-[10px] font-medium text-white/50 mt-2">
+          <div className="flex justify-between text-[10px] font-bold text-slate-500 dark:text-zinc-500 mt-2">
             <span>{formatPrice(localFilters.minPrice || 0)}</span>
             <span>{formatPrice(localFilters.maxPrice || 10000000)}</span>
           </div>
@@ -134,7 +134,7 @@ export default function SearchFilters({ filters, onFilterChange, totalResults, a
 
       {/* Year Range */}
       <div>
-        <Label className="text-sm font-medium text-white/80">Year</Label>
+        <Label className="text-sm font-semibold text-slate-700 dark:text-zinc-400">Year</Label>
         <div className="mt-3 px-2">
           <Slider
             value={[localFilters.minYear || 2000, localFilters.maxYear || 2025]}
@@ -147,7 +147,7 @@ export default function SearchFilters({ filters, onFilterChange, totalResults, a
             }}
             className="mt-2"
           />
-          <div className="flex justify-between text-[10px] font-medium text-white/50 mt-2">
+          <div className="flex justify-between text-[10px] font-bold text-slate-500 dark:text-zinc-500 mt-2">
             <span>{localFilters.minYear || 2000}</span>
             <span>{localFilters.maxYear || 2025}</span>
           </div>
@@ -156,9 +156,9 @@ export default function SearchFilters({ filters, onFilterChange, totalResults, a
 
       {/* Fuel Type */}
       <div>
-        <Label className="text-sm font-medium text-white/80">Fuel Type</Label>
+        <Label className="text-sm font-semibold text-slate-700 dark:text-zinc-400">Fuel Type</Label>
         <Select value={localFilters.fuelType} onValueChange={(v) => handleChange('fuelType', v === 'all' ? '' : v)}>
-          <SelectTrigger className="mt-1.5 h-10 rounded-xl border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors">
+          <SelectTrigger className="mt-1.5 h-10 rounded-xl border-border bg-card text-foreground hover:bg-muted/50 transition-colors">
             <SelectValue placeholder="All Fuel Types" />
           </SelectTrigger>
           <SelectContent className="bg-zinc-900 border-white/10 text-white">
@@ -194,19 +194,19 @@ export default function SearchFilters({ filters, onFilterChange, totalResults, a
       <div className="sticky top-[80px] z-10 bg-black/5backdrop-blur-sm pt-2 pb-4 lg:static lg:bg-transparent lg:p-0">
         <div className="flex gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input
               placeholder="Search by make, model..."
               value={localFilters.search || ''}
               onChange={(e) => handleChange('search', e.target.value)}
-              className="pl-10 h-11 text-sm rounded-xl border-white/10 bg-white/5 text-white focus:border-amber-500 focus:ring-amber-500 shadow-sm"
+              className="pl-10 h-11 text-sm rounded-xl border-border bg-card text-foreground focus:border-amber-500 focus:ring-amber-500 shadow-sm"
             />
           </div>
 
           {/* Mobile Filter Button */}
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" className="h-11 px-4 lg:hidden relative rounded-xl bg-white/5 border-white/10 text-white">
+              <Button variant="outline" className="h-11 px-4 lg:hidden relative rounded-xl border-border bg-card text-foreground hover:bg-muted">
                 <SlidersHorizontal className="w-4 h-4" />
                 {activeFilterCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">
@@ -229,7 +229,7 @@ export default function SearchFilters({ filters, onFilterChange, totalResults, a
 
       {/* Results Count & Active Filters */}
       <div className="flex flex-wrap gap-2 items-center px-1">
-        <span className="text-xs text-white/50 font-medium">{totalResults} vehicles found</span>
+        <span className="text-xs text-slate-500 dark:text-zinc-500 font-bold uppercase tracking-wider">{totalResults} vehicles found</span>
         {activeFilterCount > 0 && (
           <>
             <span className="text-white/20">|</span>
@@ -248,7 +248,7 @@ export default function SearchFilters({ filters, onFilterChange, totalResults, a
 
       {/* Desktop Filters */}
       <div className="hidden lg:block">
-        <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6">
+        <div className="bg-card rounded-2xl border border-border p-6 shadow-sm">
           <FilterContent />
         </div>
       </div>

@@ -115,7 +115,7 @@ export default function VehiclesPage() {
             className="absolute inset-0 w-full h-full object-cover mix-blend-overlay"
           />
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/40 to-background/90 dark:from-black/80 dark:via-black/50 dark:to-black/80" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-32">
@@ -137,12 +137,12 @@ export default function VehiclesPage() {
             {isLoading ? (
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {Array(6).fill(0).map((_, i) => (
-                  <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden animate-pulse">
-                    <div className="aspect-[4/3] bg-white/5" />
+                  <div key={i} className="bg-card backdrop-blur-md rounded-2xl overflow-hidden animate-pulse border border-border">
+                    <div className="aspect-[4/3] bg-muted" />
                     <div className="p-5 space-y-3">
-                      <div className="h-5 bg-white/5 rounded w-3/4" />
-                      <div className="h-4 bg-white/5 rounded w-1/2" />
-                      <div className="h-8 bg-white/5 rounded w-1/3" />
+                      <div className="h-5 bg-muted rounded w-3/4" />
+                      <div className="h-4 bg-muted rounded w-1/2" />
+                      <div className="h-8 bg-muted rounded w-1/3" />
                     </div>
                   </div>
                 ))}
@@ -177,18 +177,18 @@ export default function VehiclesPage() {
                         variant="outline"
                         disabled={page === 1}
                         onClick={() => setPage(p => Math.max(1, p - 1))}
-                        className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+                        className="bg-card hover:bg-muted text-foreground border-border"
                       >
                         Previous
                       </Button>
-                      <span className="text-white/70 text-sm">
+                      <span className="text-foreground/70 text-sm font-bold">
                         Page {page} of {Math.ceil(totalCount / 12)}
                       </span>
                       <Button
                         variant="outline"
                         disabled={page * 12 >= totalCount}
                         onClick={() => setPage(p => p + 1)}
-                        className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+                        className="bg-card hover:bg-muted text-foreground border-border"
                       >
                         Next
                       </Button>
